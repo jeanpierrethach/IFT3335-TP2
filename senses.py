@@ -12,6 +12,8 @@ recorded_words = []
 #    stopwords = f.readlines()
 #stopwords = [w.strip() for w in stopwords]
 
+# TODO make 1,2,3 context words possible
+# or just takes 3 next and prev then in weka remove by filtering
 
 with open(input_file) as f:
     for line in f:
@@ -41,46 +43,31 @@ with open(input_file) as f:
                 nexttag = None
                 nexttag_2 = None
 
-                if idx == 0:
-                    nextword = pairs[idx+1][0]
-                    nexttag = pairs[idx+1][1]
-                    nextword_2 = pairs[idx+2][0]
-                    nexttag_2 = pairs[idx+2][1]
-                elif idx == len(pairs)-1:
-                    prevword = pairs[idx-1][0]
-                    prevtag = pairs[idx-1][1]
-                    prevword_2 = pairs[idx-2][0]
-                    prevtag_2 = pairs[idx-2][1]
-                else:
-                    if idx == 1:
-                        prevword = pairs[idx-1][0]
-                        prevtag = pairs[idx-1][1]
-
-                        nextword = pairs[idx+1][0]
-                        nexttag = pairs[idx+1][1]
-                        nextword_2 = pairs[idx+2][0]
-                        nexttag_2 = pairs[idx+2][1]
-                    elif idx == len(pairs)-2:
-                        prevword = pairs[idx-1][0]
-                        prevtag = pairs[idx-1][1]
-                        prevword_2 = pairs[idx-2][0]
-                        prevtag_2 = pairs[idx-2][1]
-
-                        nextword = pairs[idx+1][0]
-                        nexttag = pairs[idx+1][1]
-                    else:
-                        prevword = pairs[idx-1][0]
-                        prevtag = pairs[idx-1][1]
-                        prevword_2 = pairs[idx-2][0]
-                        prevtag_2 = pairs[idx-2][1]
-                        
-                        nextword = pairs[idx+1][0]
-                        nexttag = pairs[idx+1][1]
-                        nextword_2 = pairs[idx+2][0]
-                        nexttag_2 = pairs[idx+2][1]
+                for n in range(1,3):
+                    i = idx+n
+                    if i > len(pairs)-1:
+                        continue
+                    
+                    if n == 1:
+                        nextword = pairs[i][0]
+                        nexttag = pairs[i][1]
+                    elif n == 2:
+                        nextword_2 = pairs[i][0]
+                        nexttag_2 = pairs[i][1]
+                for n in range(1,3):
+                    j = idx-n
+                    if j < 0:
+                        continue
+                   
+                    if n == 1:
+                        prevword = pairs[j][0]
+                        prevtag = pairs[j][1]
+                    elif n == 2:
+                        prevword_2 = pairs[j][0]
+                        prevtag_2 = pairs[j][1]
 
                 recorded_words.append((prevword_2, prevword, nextword, nextword_2, prevtag_2, prevtag, nexttag, nexttag_2, p[0]))
-                
+            
 # Output .arff format
 with open(output_file, 'w') as f:
     f.write("% interestacl94.arff")
