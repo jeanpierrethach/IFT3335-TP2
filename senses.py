@@ -1,19 +1,28 @@
+import argparse
 import re
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--stopwords', 
+                        action='store_true',
+                        help='Boolean flag indicating if stopwords should be ignored.')
+    args = parser.parse_args()
+    return args
+
+args = parse_args()
+
 input_file = 'interest.acl94.txt'
-output_file = 'interestacl94.arff'
+output_file = 'interestacl94.arff' if not args.stopwords else 'interestacl94stopwords.arff'
 stoplist_file = 'stoplist-english.txt'
 
 recorded_words = []
 
-#stopwords = []
+if args.stopwords:
+    stopwords = []
 
-#with open(stoplist_file) as f:
-#    stopwords = f.readlines()
-#stopwords = [w.strip() for w in stopwords]
-
-# TODO make 1,2,3 context words possible
-# or just takes 3 next and prev then in weka remove by filtering
+    with open(stoplist_file) as f:
+        stopwords = f.readlines()
+    stopwords = [w.strip() for w in stopwords]
 
 with open(input_file) as f:
     for line in f:
@@ -30,7 +39,9 @@ with open(input_file) as f:
         tags = [re.sub("[^0-9a-zA-Z%]+", "X", p[1]) for p in words_tags]
 
         pairs = list(zip(words, tags))
-        #pairs = [p for p in pairs if p[0] not in stopwords]
+
+        if args.stopwords:
+            pairs = [p for p in pairs if p[0] not in stopwords]
 
         for idx, p in enumerate(pairs):
             if re.match("^interest[0-9AB]", p[0]):
@@ -75,10 +86,13 @@ with open(input_file) as f:
                         prevtag_3 = pairs[j][1]
 
                 recorded_words.append((prevword_3, prevword_2, prevword, nextword, nextword_2, nextword_3, prevtag_3, prevtag_2, prevtag, nexttag, nexttag_2, nexttag_3, p[0]))
-            
+        
 # Output .arff format
 with open(output_file, 'w') as f:
-    f.write("% interestacl94.arff")
+    if args.stopwords:
+        f.write("% interestacl94stopwords.arff")
+    else:    
+        f.write("% interestacl94.arff")
     f.write("\n\n")
     f.write("@relation interest\n\n")
     f.write("@attribute prevword_3 String\n")
