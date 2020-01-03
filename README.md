@@ -21,4 +21,5 @@ python senses.py --stopwords
 ```
 
 #### Arguments
+* `--ws`: Window size (Number of preceding and following words to consider). *Default*: `3`
 * `--stopwords`: Boolean flag indicating if stopwords are ignored during feature extraction
