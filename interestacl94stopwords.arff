@@ -4,14 +4,14 @@
 
 @attribute prevword_3 String
 @attribute prevword_2 String
-@attribute prevword String
-@attribute nextword String
+@attribute prevword_1 String
+@attribute nextword_1 String
 @attribute nextword_2 String
 @attribute nextword_3 String
 @attribute prevtag_3 String
 @attribute prevtag_2 String
-@attribute prevtag String
-@attribute nexttag String
+@attribute prevtag_1 String
+@attribute nexttag_1 String
 @attribute nexttag_2 String
 @attribute nexttag_3 String
 @attribute 'Class' {'interest1', 'interest2', 'interest3', 'interest4', 'interest5', 'interest6'}
